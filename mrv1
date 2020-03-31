@@ -1,0 +1,39 @@
+MRv 1 Architecture
+
+JOb Tracker , Task Tracker 
+
+Resource Management 
+Scheduling Tasks 
+Job Coordination 
+Job Progress
+Tracking Failures & Reruns 
+
+In MRV1 the number of mapper and executor that can be executed on each node is specified at the cluster level. 
+mapred.tasktarcker.map.tasks.maximum
+mapred.tasktarcker.reducer.tasks.maximum
+
+JOb Tracker - Java process , generally run on a separate node from namenode and datanode
+
+Task Tracker - runs on data node.
+
+Client (MR job) requests Job Tracker to run a MR job. Job tracker gives the id. Client will check the input directory is available and the output directory doesn't exist. Preliminary checks 
+
+Client will calculate the input split s--> physical block location --> JOb tracker looks at the input splits .
+
+--What factors Job Tracker needs to consider befor running a mapper ?
+
+It needs to finds free slot i.e Node has enough capacity.It is ideal to run the mapper where data resides ( Data Locality)
+
+Job tracker will ask the task tracker to execute the mapper on the node. Task tracker monitor the progress and communicates it to Job Tracker which sends it back to client.
+
+Job tracker takes the responsibilty to find slots to run the reducer as well. 
+
+Mapper/Reducer and Task tracker executes on separate JVM. To avoid memory leaks. 
+
+Failure 
+Mapper/Reducer failed - Task tracker informs the Job tracker and another node is found to run the mapper. 
+
+Task Tracker Failed - Mapper and reducer executed by the task  tracker will be considered failed . Job tracker will arrange the same execution on another node.   
+
+Job tracker failure- Critical . All process failed 
+
